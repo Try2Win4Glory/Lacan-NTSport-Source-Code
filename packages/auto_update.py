@@ -30,7 +30,7 @@ class AutoUpdate(commands.Cog):
             f.close()
             with open('weeklyupdate.txt', 'w') as f:
                 f.write(str(round(time.time())+604800))
-        
+        return
         dbclient = DBClient()
         collection = dbclient.db['test']
         documents = await dbclient.get_array(collection, {})
