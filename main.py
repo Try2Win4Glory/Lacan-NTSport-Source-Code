@@ -51,7 +51,6 @@ client.remove_command('help')
 
 @client.event
 async def on_ready():
-    logging.getLogger("asyncio").setLevel(logging.WARNING)
     for command_group in sorted(listdir('./commands')):
         for command in sorted(listdir(f'./commands/{command_group}')):
             if command.endswith('.py'):
