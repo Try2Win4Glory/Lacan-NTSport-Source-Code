@@ -40,7 +40,7 @@ class Command(commands.Cog):
             pass
         thelistofroles = ["Gold Member", [">99% Accuracy", "99% Accuracy", "98% Accuracy", "97% Accuracy", "96% Accuracy", "94-95% Accuracy", "90-93% Accuracy", "87-89% Accuracy", "84-86% Accuracy", "80-83% Accuracy", "75-79% Accuracy", "<75% Accuracy"], ["220+ WPM", "210-219 WPM", "200-209 WPM", "190-199 WPM", "180-189 WPM", "170-179 WPM", "160-169 WPM", "150-159 WPM", "140-149 WPM", "130-139 WPM", "120-129 WPM", "110-119 WPM", "100-109 WPM", "90-99 WPM", "80-89 WPM", "70-79 WPM", "60-69 WPM", "50-59 WPM", "40-49 WPM", "30-39 WPM", "20-29 WPM", "10-19 WPM", "1-9 WPM"], ["500000+ Races", "250000-499999 Races", "200000-249999 Races", "150000-199999 Races", "100000-149999 Races", "75000-99999 Races", "50000-74999 Races", "40000-49999 Races", "30000-39999 Races", "20000-29999 Races", "10000-19999 Races", "5000-9999 Races", "3000-4999 Races", "1000-2999 Races","500-999 Races", "100-499 Races", "50-99 Races", "1-49 Races"]]
         listofroles = ["Gold Member", ">99% Accuracy", "99% Accuracy", "98% Accuracy", "97% Accuracy", "96% Accuracy", "94-95% Accuracy", "90-93% Accuracy", "87-89% Accuracy", "84-86% Accuracy", "80-83% Accuracy", "75-79% Accuracy", "<75% Accuracy", "220+ WPM", "210-219 WPM", "200-209 WPM", "190-199 WPM", "180-189 WPM", "170-179 WPM", "160-169 WPM", "150-159 WPM", "140-149 WPM", "130-139 WPM", "120-129 WPM", "110-119 WPM", "100-109 WPM", "90-99 WPM", "80-89 WPM", "70-79 WPM", "60-69 WPM", "50-59 WPM", "40-49 WPM", "30-39 WPM", "20-29 WPM", "10-19 WPM", "1-9 WPM", "500000+ Races", "250000-499999 Races", "200000-249999 Races", "150000-199999 Races", "100000-149999 Races", "75000-99999 Races", "50000-74999 Races", "40000-49999 Races", "30000-39999 Races", "20000-29999 Races", "10000-19999 Races", "5000-9999 Races", "3000-4999 Races", "1000-2999 Races","500-999 Races", "100-499 Races", "50-99 Races", "1-49 Races"]
-        teamswithroles=['[NTA]', '[DRPT]', '[IRAN2]', '[N8TE]', '[NYM]']
+        teamswithroles=['[NTA]', '[DRPT]', '[IRAN2]', '[N8TE]', '[RRN]']
         #data = requests.get('https://test-db.nitrotypers.repl.co', data={"key": os.getenv('DB_KEY')}).text
         #data = json.loads(data)
         dbclient = DBClient()
@@ -61,11 +61,35 @@ class Command(commands.Cog):
               #embed.footer('Discord user '+str(ctx.author.name + '#' + ctx.author.discriminator)+' is a 🛠️developer🛠️ of this bot. \n⚙️This command is a premium 💠 only command.⚙️', 'https://media.discordapp.net/attachments/719414661686099993/765490220858081280/output-onlinepngtools_32.png')
             
             return await embed.send(ctx)
+
+            '''def remove_chars(data, chars):
+              new_data = data
+              for ch in chars:
+                  new_data = new_data.replace(ch, '')
+              return new_data'''
+
         try:
+            #Sent with ID
             user = await ctx.guild.fetch_member(userid)
         except:
-            embed = Embed('Error!', 'I couldn\'t get the user you are trying to update!', 'warning')
-            return await embed.send(ctx)
+          try:
+            #Enable Mention Computer
+            userid0 = userid.replace("<@!", "")
+            userid1 = userid0.replace(">", "")
+            print(userid)
+            #Fetch User
+            user = await ctx.guild.fetch_member(userid1)
+          except:
+            try:
+              #Enable Mention Mobile
+              userid0 = userid.replace("<@", "")
+              userid1 = userid0.replace(">", "")
+              print(userid)
+              #Fetch User
+              user = await ctx.guild.fetch_member(userid1)
+            except:
+              embed = Embed('Error!', 'I couldn\'t get the user you are trying to update!', 'warning')
+              return await embed.send(ctx)
         for role in (user.roles):
             name = role.name
             if name in listofroles or name in teamswithroles:
@@ -81,7 +105,7 @@ class Command(commands.Cog):
                 ntuser = player['NTuser']
                 break
         else:
-            embed = Embed('Error!', 'Doesn\'t seem like <@'+userid+'> is registered!', 'warning')
+            embed = Embed('Error!', 'Doesn\'t seem like '+userid+' is registered!', 'warning')
             return await embed.send(ctx)
         racer = await Racer(ntuser)
         
@@ -310,7 +334,7 @@ class Command(commands.Cog):
             try:
                 await user.add_roles(role)
             except Exception:
-                embed = Embed('Error!', 'The bot is not able to update the roles of <@'+userid+'>. Make sure I have the `Manage Roles` permission, am ranked higher than that roles and <@'+userid+'> did a season race yet.')
+                embed = Embed('Error!', 'The bot is not able to update the roles of '+user+'. Make sure I have the `Manage Roles` permission, am ranked higher than that roles and '+user+' did a season race yet.')
                 await embed.send(ctx)
 
             #Teamroles
@@ -341,18 +365,18 @@ class Command(commands.Cog):
             try:
                 await user.edit(nick=racer.tag+' ' +racer.name)
             except Exception:
-                embed = Embed('Error!', 'The bot needs following permissions: `Manage Nicknames` \n \n **Note:** If <@'+userid+'> is the server owner or not ranked lower than my highest role, I won\'t be able to update <@'+userid+'>\'s nickname, but I will update <@'+userid+'>\'s roles. :grinning:', 'warning')
+                embed = Embed('Error!', 'The bot needs following permissions: `Manage Nicknames` \n \n **Note:** If '+str(user)+' is the server owner or not ranked lower than my highest role, I won\'t be able to update <@'+str(user.id)+'>\'s nickname, but I will update <@'+str(user.id)+'>\'s roles. :grinning:', 'warning')
                 if (ctx.author.id) not in [505338178287173642, 637638904513691658, 396075607420567552]:
                   embed.footer('This command is a premium 💠 only command. Run n.premium to learn more about premium.','https://cdn.discordapp.com/attachments/719414661686099993/754971786231283712/season-callout-badge.png')
 
                 else:
                     embed.footer('Discord user '+str(ctx.author.name + '#' + ctx.author.discriminator)+' is a 🛠️developer🛠️ of this bot. \nThis command is a premium 💠 only command.', 'https://media.discordapp.net/attachments/719414661686099993/765490220858081280/output-onlinepngtools_32.png')
                 return await embed.send(ctx)
-            embed = Embed('Success!', 'Successfully updated <@'+userid+'>\'s roles and nickname!', 'white_check_mark')        
+            embed = Embed('Success!', 'Successfully updated <@'+str(user.id)+'>\'s roles and nickname!', 'white_check_mark')        
             if (ctx.author.id) not in [505338178287173642, 637638904513691658, 396075607420567552]:
               embed.footer('This command is a premium 💠 only command. Run n.premium to learn more about premium.','https://cdn.discordapp.com/attachments/719414661686099993/754971786231283712/season-callout-badge.png')
             else:
-              embed.footer('Discord user '+str(ctx.author.name + '#' + ctx.author.discriminator)+' is a 🛠️developer🛠️ of this bot. \nThis command is a premium 💠 only command.', 'https://media.discordapp.net/attachments/719414661686099993/765490220858081280/output-onlinepngtools_32.png')
+              embed.footer('Discord user '+str(ctx.author)+' is a 🛠️developer🛠️ of this bot. \nThis command is a premium 💠 only command.', 'https://media.discordapp.net/attachments/719414661686099993/765490220858081280/output-onlinepngtools_32.png')
             await embed.send(ctx)
 def setup(client):
     client.add_cog(Command(client))

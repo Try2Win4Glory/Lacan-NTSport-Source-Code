@@ -25,7 +25,12 @@ class Command(commands.Cog):
         if ''.join(list(user)[0:32]) == 'https://www.nitrotype.com/racer/':
             racer = await Racer(''.join(list(user)[32:]))
         else:
+          try:
             racer = await Racer(user)
+          except AttributeError:
+            embed = Embed('Error!', 'Couldn\'t find that user. Make sure to use `n.register <username>`.', 'warning')
+            await embed.send(ctx)
+            return
         if not racer.success:
             embed = Embed('Error!', 'Couldn\'t find that user. Make sure to use `n.register <username>`.', 'warning')
             await embed.send(ctx)
@@ -36,7 +41,7 @@ class Command(commands.Cog):
         dbdata = await dbclient.get_big_array(collection, 'registered')
         for x in dbdata['registered']:
             if str(ctx.author.id) == x['userID']:
-                embed = Embed('Error!', 'You\'ve already registered!\nIn case this is a premium :diamond_shape_with_a_dot_inside: server, run `n.update` to update your roles.', 'warning')
+                embed = Embed('Error!', 'You\'ve already registered!\nRun `n.verify` to check if you already verified your identity and in case this is a premium :diamond_shape_with_a_dot_inside: server and you are already verified, run `n.update` to update your roles.', 'warning')
                 await embed.send(ctx)
                 return
             if user == x['NTuser']:

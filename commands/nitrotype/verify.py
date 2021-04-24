@@ -27,6 +27,7 @@ class Command(commands.Cog):
         if type == 'car':
             return await verify(ctx)
         if type == 'race':
+            #return await ctx.send('**Your** security is important for **us**! Because of security reasons, this command has been taken down and will be back soon. Thanks for your understanding.')
             dbclient = DBClient()
             collection = dbclient.db.NT_to_discord
             dbdata = await dbclient.get_big_array(collection, 'registered')
@@ -35,7 +36,7 @@ class Command(commands.Cog):
                     if elem['verified'] == 'false':
                         username = elem['NTuser']
                         embed = Embed(':clipboard:  Verify your Identity!', f'Join the race to verify **{username}** is owned by you. You don\'t own **{username}**? Run `n.unregister` to unlink your discord from this account.')
-                        embed.field('__Instructions__', 'Once you join the race, the race leader will leave and you just have to type n.verify again to verify. If this does not work, please try unregistering and registering again.')
+                        embed.field('__Instructions__', 'Once you join the race, the race leader will leave and you just have to type `n.verify` again to verify. If this does not work after several times typing `n.verify`, please try unregistering and registering again.')
                         embed.field('__Short instructions__', '**1.** Run `n.verify`\n**2.** Join the race track shown under the link category.\n**3.** Run `n.verify` again.')
                         embed.field('__Common errors__', 'Is the race leader not joining the race? Refresh your page, after maximal **4** refreshs the race leader joins and you can attempt to verify.')
                         embed.field('__Link__', 'Join [this](https://www.nitrotype.com/race/lacanverification) race to verify your identity.')
@@ -46,11 +47,11 @@ class Command(commands.Cog):
                         collection = dbclient.db.NT_to_discord
                         await dbclient.update_big_array(collection, 'registered', dbdata)
                         async with aiohttp.ClientSession() as s:
-                            await self.fetch(s,'https://nebuliteforgold-2.adl212.repl.co')
+                            await self.fetch(s,'https://Lacan-Verification.try2win4code.repl.co')
                         break
                     if elem['verified'] == 'in progress':
                         async with aiohttp.ClientSession() as s:
-                            response = await self.fetch(s,'https://nebuliteforgold-2.adl212.repl.co', method='GET')
+                            response = await self.fetch(s,'https://Lacan-Verification.try2win4code.repl.co', method='GET')
 
                         data = json.loads(response)
                         if elem['NTuser'] in data['verified']:
@@ -64,11 +65,11 @@ class Command(commands.Cog):
                             username = elem['NTuser']
                             embed = Embed('Nearly there!', f'You\'re nearly done - just one more step to go!\nYou are just about to verify your ownership for **{username}**. Not you? Run `n.unregister` to unlink your discord from this account.', 'warning')
                             embed.field('__Instructions__', 'Please join the race and run `n.verify` again.')
-                            embed.field('__Common errors__', 'Is the race leader not joining the race? Refresh your page, after maximal **4** refreshs the race leader joins and you can attempt to verify.')
+                            embed.field('__Common errors__', 'Is the race leader not joining the race? Run `n.verify` again and refresh your page, after maximal **5** times running the command, the race leader joins and you can attempt to verify.')
                             embed.field('__Link__', 'Join [this](https://www.nitrotype.com/race/lacanverification) race to verify your identity.')
                             await embed.send(ctx)
                             async with aiohttp.ClientSession() as s:
-                                await self.fetch(s,'https://nebuliteforgold-2.adl212.repl.co')
+                                await self.fetch(s,'https://Lacan-Verification.try2win4code.repl.co')
                             break
                     if elem['verified'] == 'true':
                         embed = Embed('Error!', 'You are already verified :rofl:', 'joy')

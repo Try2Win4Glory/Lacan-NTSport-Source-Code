@@ -22,11 +22,12 @@ class Command(commands.Cog):
                 return await response.json()
     @commands.command()
     async def checkbot(self, ctx, username):
+       # return await ctx.send('**Your** security is important for **us**! Because of security reasons, this command has been taken down and will be back soon. Thanks for your understanding.')
         racer = await Racer(username)
         async with aiohttp.ClientSession() as s:
-            botornot = await self.fetch('https://FeistyVacantAddon.adl212.repl.co', s, data={'username': username})
+            botornot = await self.fetch('https://Lacan-Checkbot.try2win4code.repl.co', s, data={'username': username})
             print(botornot)
-            csvdata = await self.fetch('https://FeistyVacantAddon.adl212.repl.co/data.csv',s)
+            csvdata = await self.fetch('https://Lacan-Checkbot.try2win4code.repl.co/data.csv',s)
         with open('data.csv', 'w') as f:
             f.write(csvdata)
         df = pandas.read_csv("data.csv")
@@ -62,12 +63,10 @@ class Command(commands.Cog):
         embed = Embed('Botting Or Not?', 'Analysis of **'+username+'**')
         if botornot['botornot'] == 'error':
             embed.field('Error!', 'I could not find that account!')
-        if botornot['botornot']:
-            embed.field('Bot Or Not', '__BOT__')
-            embed.field('Accuracy', '`'+str(botornot['accuracy'])+'`%')
         else:
-            embed.field('Bot Or Not', '__LEGIT__')
-            embed.field('Accuracy', '`'+str(botornot['accuracy'])+'`%')
+            embed.field('Bot Or Not', '__BOT__' if botornot['botornot'][0] == 1 else '__LEGIT__')
+            embed.field('Chance Of Being A Bot', str(botornot['botornot'][1]*100)+'%')
+            embed.field('Accuracy', '`'+str(((botornot['accuracy'][0]*100)+(botornot['accuracy'][1]*100))/2)+'`%')
         file = discord.File("graph.png", filename="graph.png")
         embed.image(url="attachment://graph.png")
         await ctx.send(file=file, embed=embed.default_embed())
