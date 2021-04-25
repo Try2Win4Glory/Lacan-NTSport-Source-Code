@@ -37,11 +37,9 @@ class Command(commands.Cog):
         dbclient = DBClient()
         collection = dbclient.db.pointsdb
         data = await dbclient.get_array(collection, {'$and': [{'userid': str(ctx.author.id)}, {'userid': str(ctx.author.id)}]})
-        async for d in data:
-            user = d
-            break
-        old = user.copy()
+        user = data
         try:
+            old = user.copy()
             if ((round(time.time())-user['laststamp'] >= 75600)):
                 user['points'] += 5
                 user['laststamp'] = round(time.time())

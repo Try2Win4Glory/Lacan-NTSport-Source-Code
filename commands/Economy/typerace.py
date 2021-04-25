@@ -75,11 +75,9 @@ class Command(commands.Cog):
             dbclient = DBClient()
             collection = dbclient.db.pointsdb
             data = await dbclient.get_array(collection, {'$and': [{'userid': str(ctx.author.id)}, {'userid': str(ctx.author.id)}]})
-            async for d in data:
-                user = d
-                break
-            old = copy.deepcopy(user)
+            user = data
             try:
+                old = copy.deepcopy(user)
                 for car in user['cars']:
                     if user['equipped']['img'] in shopcars:
                         carbonus = True
@@ -110,7 +108,7 @@ class Command(commands.Cog):
                     user['points'] += earned
                     await dbclient.update_array(collection, old, user)
             except:
-                dbclient.create_doc(collection, {'userid': str(ctx.author.id), 'points': earned})
+                await dbclient.create_doc(collection, {'userid': str(ctx.author.id), 'points': earned})
 
         else:
             embed = Embed('<a:false:800330847865143327>  Oops!', 'You messed up sadly... and lost **3** '+random_lacan+'.')
@@ -120,15 +118,16 @@ class Command(commands.Cog):
             collection = dbclient.db.pointsdb
             data = await dbclient.get_array(collection, {'$and': [{'userid': str(ctx.author.id)}, {'userid': str(ctx.author.id)}]})
             lost = -3
-            async for d in data:
-                user = d
-                break
-            old = user.copy()
-            if user['userid'] == str(ctx.author.id):
-                user['points'] += lost
-                await dbclient.update_array(collection, old, user)
-            else:
-                dbclient.create_doc(collection, {'userid': str(ctx.author.id), 'points': lost})
+            user = data
+            try:
+                old = user.copy()
+                if user['userid'] == str(ctx.author.id):
+                    user['points'] += lost
+                    await dbclient.update_array(collection, old, user)
+                else:
+                    await dbclient.create_doc(collection, {'userid': str(ctx.author.id), 'points': lost})
+            except:
+                await dbclient.create_doc(collection, {'userid': str(ctx.author.id), 'points': lost})
             return
 
 
